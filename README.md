@@ -17,51 +17,6 @@ You'll use Google Container Engine to create and manage your Kubernetes cluster.
 ./deploy-jenkins-k8s.sh
 ```
 
-## Install Helm
-
-In this lab, you will use Helm to install Jenkins from the Charts repository. Helm is a package manager that makes it easy to configure and deploy Kubernetes applications.  Once you have Jenkins installed, you'll be able to set up your CI/CD pipleline.
-
-1. Download and install the helm binary
-
-    ```shell
-    wget https://storage.googleapis.com/kubernetes-helm/helm-v2.14.1-linux-amd64.tar.gz
-    ```
-
-1. Unzip the file to your local system:
-
-    ```shell
-    tar zxfv helm-v2.14.1-linux-amd64.tar.gz
-    cp linux-amd64/helm .
-    ```
-
-1. Add yourself as a cluster administrator in the cluster's RBAC so that you can give Jenkins permissions in the cluster:
-    
-    ```shell
-    kubectl create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
-    ```
-
-1. Grant Tiller, the server side of Helm, the cluster-admin role in your cluster:
-
-    ```shell
-    kubectl create serviceaccount tiller --namespace kube-system
-    kubectl create clusterrolebinding tiller-admin-binding --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-    ```
-
-1. Initialize Helm. This ensures that the server side of Helm (Tiller) is properly installed in your cluster.
-
-    ```shell
-    ./helm init --service-account=tiller
-    ./helm update
-    ```
-
-1. Ensure Helm is properly installed by running the following command. You should see versions appear for both the server and the client of ```v2.14.1```:
-
-    ```shell
-    ./helm version
-    Client: &version.Version{SemVer:"v2.14.1", GitCommit:"5270352a09c7e8b6e8c9593002a73535276507c0", GitTreeState:"clean"}
-    Server: &version.Version{SemVer:"v2.14.1", GitCommit:"5270352a09c7e8b6e8c9593002a73535276507c0", GitTreeState:"clean"}
-    ```
-
 ## Configure and use Jenkins
 
 1. Run the following command to setup port forwarding to the Jenkins UI from the Cloud Shell
@@ -86,6 +41,7 @@ Upon completion of their work they will automatically be turned down and their r
 
 Notice that this service exposes ports `8080` and `50000` for any pods that match the `selector`. This will expose the Jenkins web UI and builder/agent registration ports within the Kubernetes cluster.
 Additionally the `jenkins-ui` services is exposed using a ClusterIP so that it is not accessible from outside the cluster.
+
 
 ## Connect to Jenkins
 
