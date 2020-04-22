@@ -9,6 +9,7 @@ master:
     - google-source-plugin:latest
     - google-kubernetes-engine:latest
     - google-storage-plugin:latest
+    - amazon-ecs:latest
   resources:
     requests:
       cpu: "50m"
